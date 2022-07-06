@@ -16,6 +16,9 @@ davisdata <- read.csv(file="UCDavis.csv")
 ```
 ## Our Goal is to answer this question Is there a difference between the alcohol consumed between the row
 ## you choose to sit in??
+  
+$H_0$: There is no difference between the alcohol consumed and the row people choose to sit in  
+$H_A$: There is a difference between the alcohol consumed and the row people choose to sit in  
 
 ## Now with ggplot - first select the basic data
 
@@ -34,11 +37,33 @@ basicCN + geom_boxplot()
 ```{r}
 basicCN + geom_boxplot(notch=TRUE,outlier.color = "red") + stat_boxplot(geom ='errorbar') + labs(title="Fancy notch boxplot \n with 2 lines")
 ```
+  
+The box plot above appears to show that people in the back row have consumed more alcohol than those that sit in the middle or front rows. The middle and back rows are consuming more alcohol.  
 
-## Numerical Summarys 
+## Numerical Summarys   
 
+```{r}
+favstats(alcohol~Seat,data=davisdata)
+```
+  
+The back row average is 9.6 which is greater than the averages for the front (1.8) and the middle at (3.2). The majority of individuals are sitting in the back sections consuming 3x more than the middle and 9x more than the front.  
+  
 ## Inferential Tests
-
+  
+```{r}
+model1 <- aov(alcohol~Seat,data=davisdata)
+summary.aov(model1)
+```
+  
+```{r}
+plot(TukeyHSD(model1))
+```
+  
+There is a significant difference between alcohol consumption by the individuals in the back row when compared to the fron row. The p-value is 0.000116. However, there is no evidence that there is a difference between the middle row and the front row.  
+  
 ## Conclusions
 
-
+The goal was to answer if there is a difference between the alcohol consumed between the row you choose to sit in? Our null and alternate hypothesis is:
+$H_0$: There is no difference between the alcohol consumed and the row people choose to sit in  
+$H_A$: There is a difference between the alcohol consumed and the row people choose to sit in  
+Since the p-value is 0.000116 we reject the null hypothesis since it was less than 0.05. 
